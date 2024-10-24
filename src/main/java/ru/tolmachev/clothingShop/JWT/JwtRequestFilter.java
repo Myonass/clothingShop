@@ -30,6 +30,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
+        String path = request.getServletPath();
+        if (path.equals("/register") || path.equals("/login")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         final String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
@@ -54,6 +60,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService() {
         return ApplicationContextHolder.getContext().getBean(UserDetailsService.class);
     }
+
 }
 
 

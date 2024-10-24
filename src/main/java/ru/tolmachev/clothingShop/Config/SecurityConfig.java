@@ -13,8 +13,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ru.tolmachev.clothingShop.JWT.JwtRequestFilter;
-
+import ru.tolmachev.clothingShop.Service.CustomUserDetailsService;
 
 
 @Configuration
@@ -26,31 +29,17 @@ public class SecurityConfig {
     public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
         this.jwtRequestFilter = jwtRequestFilter;
     }
-
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("user")
-                        .password(passwordEncoder().encode("userpass"))
-                        .roles("USER")
-                        .build(),
-                User.withUsername("admin")
-                        .password(passwordEncoder().encode("adminpass"))
-                        .roles("ADMIN")
-                        .build()
-        );
-    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
+                .cors().and()
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/authenticate").permitAll()
+                        .requestMatchers("/api/users/register", "/api/users/authenticate").permitAll() // Убедитесь, что разрешено
                         .anyRequest().authenticated()
                 )
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // JWT-сессии не нужны
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // JWT фильтр
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -60,9 +49,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http, CustomUserDetailsService customUserDetailsService) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService())
+                .userDetailsService(customUserDetailsService) // Используйте ваш сервис
                 .passwordEncoder(passwordEncoder())
                 .and()
                 .build();

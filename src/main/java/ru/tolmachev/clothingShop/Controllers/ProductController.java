@@ -1,7 +1,6 @@
 package ru.tolmachev.clothingShop.Controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.tolmachev.clothingShop.Models.Product;
 import ru.tolmachev.clothingShop.Service.ProductService;

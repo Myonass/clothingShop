@@ -9,12 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.tolmachev.clothingShop.Auth.AuthRequest;
 import ru.tolmachev.clothingShop.Auth.AuthResponse;
 import ru.tolmachev.clothingShop.JWT.JwtUtil;
 
 @RestController
+@RequestMapping("/api/users")
 public class AuthController {
 
     @Autowired
@@ -32,13 +34,16 @@ public class AuthController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
+            System.out.println("Аутентификация прошла успешно"); // Логирование
         } catch (BadCredentialsException e) {
+            System.out.println("Ошибка аутентификации: " + e.getMessage()); // Логирование
             throw new Exception("Incorrect username or password", e);
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
+        System.out.println("Сгенерирован токен для пользователя: " + userDetails.getUsername()); // Логирование
         return ResponseEntity.ok(new AuthResponse(jwt));
     }
 }
