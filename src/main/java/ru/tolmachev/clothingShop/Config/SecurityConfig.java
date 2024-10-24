@@ -34,7 +34,7 @@ public class SecurityConfig {
         http.csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/api/users/register", "/api/users/authenticate").permitAll() // Убедитесь, что разрешено
+                        .requestMatchers("/api/users/register", "/api/users/authenticate").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

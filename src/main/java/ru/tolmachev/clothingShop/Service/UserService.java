@@ -19,10 +19,15 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(User user) {
+    public User registerUser(User user, boolean isAdmin) {
         System.out.println("Регистрация пользователя: " + user.getUsername());
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Хэширование пароля
-        user.setRoles(List.of(UserRole.ROLE_USER)); // Назначение роли по умолчанию
+        user.setPassword(passwordEncoder.encode(user.getPassword())); //
+
+        if (isAdmin) {
+            user.setRoles(List.of(UserRole.ROLE_ADMIN));
+        } else {
+            user.setRoles(List.of(UserRole.ROLE_USER));
+        }
 
         User savedUser = userRepository.save(user);
         System.out.println("Пользователь сохранен: " + savedUser.getId());

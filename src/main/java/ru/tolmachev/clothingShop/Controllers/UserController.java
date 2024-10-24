@@ -18,9 +18,9 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@RequestBody User user, @RequestParam boolean isAdmin) {
         try {
-            User savedUser = userService.registerUser(user); // Здесь передаем объект User в сервис
+            User savedUser = userService.registerUser(user, isAdmin);
             return ResponseEntity.ok(savedUser);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
