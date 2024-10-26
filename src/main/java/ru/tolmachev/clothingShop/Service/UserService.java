@@ -28,6 +28,9 @@ public class UserService {
         } else {
             user.setRoles(List.of(UserRole.ROLE_USER));
         }
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("Username already taken");
+        }
 
         User savedUser = userRepository.save(user);
         System.out.println("Пользователь сохранен: " + savedUser.getId());
