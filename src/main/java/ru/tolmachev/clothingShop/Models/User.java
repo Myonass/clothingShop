@@ -23,7 +23,7 @@ public class User {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING) // Хранение ролей в виде строк в базе данных
+    @Enumerated(EnumType.STRING)
     private List<UserRole> roles;
 
 }
