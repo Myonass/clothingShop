@@ -34,9 +34,9 @@ public class AuthController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
-            System.out.println("Аутентификация прошла успешно"); // Логирование
+            System.out.println("Аутентификация прошла успешно");
         } catch (BadCredentialsException e) {
-            System.out.println("Ошибка аутентификации: " + e.getMessage()); // Логирование
+            System.out.println("Ошибка аутентификации: " + e.getMessage());
             throw new Exception("Incorrect username or password", e);
         }
 
@@ -47,4 +47,3 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(jwt));
     }
 }
-
